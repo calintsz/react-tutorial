@@ -564,9 +564,9 @@ src 디렉터리에 lib 디렉터리를 만들고, 다음 파일을 작성해주
 #### src/lib/createAsyncThunk.ts
 ```javascript
 import { Dispatch } from 'redux';
-import { AsyncActionCreator } from 'typesafe-actions';
+import { AsyncActionCreatorBuilder } from 'typesafe-actions';
 
-type AnyAsyncActionCreator = AsyncActionCreator<any, any, any>;
+type AnyAsyncActionCreator = AsyncActionCreatorBuilder<any, any, any>;
 
 export default function createAsyncThunk<A extends AnyAsyncActionCreator, F extends (...params: any[]) => Promise<any>>(
   asyncActionCreator: A,
@@ -739,7 +739,7 @@ export const asyncState = {
   })
 };
 
-type AnyAsyncActionCreator = AsyncActionCreator<any, any, any>;
+type AnyAsyncActionCreator = AsyncActionCreatorBuilder<any, any, any>;
 export function createAsyncReducer<S, AC extends AnyAsyncActionCreator, K extends keyof S>(
   asyncActionCreator: AC,
   key: K
@@ -1014,7 +1014,7 @@ export default GithubProfileLoader;
 #### `src/lib/createAsyncSaga.ts`
 ```javascript
 import { call, put } from 'redux-saga/effects';
-import { AsyncActionCreator, PayloadAction } from 'typesafe-actions';
+import { AsyncActionCreatorBuilder, PayloadAction } from 'typesafe-actions';
 
 /* 
   유틸함수의 재사용성을 높이기 위하여 함수의 파라미터는 언제나 하나의 값을 사용하도록 하고,
@@ -1030,7 +1030,7 @@ function isPayloadAction<P>(action: any): action is PayloadAction<string, P> {
 }
 
 export default function createAsyncSaga<T1, P1, T2, P2, T3, P3>(
-  asyncActionCreator: AsyncActionCreator<[T1, P1], [T2, P2], [T3, P3]>,
+  asyncActionCreator: AsyncActionCreatorBuilder<[T1, P1, any], [T2, P2, any], [T3, P3, any]>,
   promiseCreator: PromiseCreatorFunction<P1, P2>
 ) {
   return function* saga(action: ReturnType<typeof asyncActionCreator.request>) {
